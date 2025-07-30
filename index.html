@@ -124,19 +124,19 @@
         document.addEventListener('DOMContentLoaded', () => {
             // --- Configuration ---
             const brainrotItems = [
-                { img: 'https://www.rpgstash.com/225829-catalog_page/rbl-la-grande-combinasion-roblox-other-items-6341.jpg', caption: 'La Grande Combinasion', glow: 'default' },
-                { img: 'https://www.rpgstash.com/225833-catalog_page/rbl-odin-din-din-dun-roblox-other-items-6345.jpg', caption: 'Odin Din Din Dun', glow: 'default' },
-                { img: 'https://www.rpgstash.com/225831-catalog_page/rbl-rainbow-odin-din-din-dun-roblox-other-items-6343.jpg', caption: 'Rainbow Odin Din Din Dun', glow: 'rainbow' },
-                { img: 'https://www.rpgstash.com/225825-catalog_page/rbl-golden-los-tralaleritos-roblox-other-items-6337.jpg', caption: 'Golden Los Tralaleritos', glow: 'golden' },
-                { img: 'https://www.rpgstash.com/225834-catalog_page/rbl-tralalero-tralala-roblox-other-items-6346.jpg', caption: 'Tralalero Tralala', glow: 'default' },
-                { img: 'https://www.rpgstash.com/225824-catalog_page/rbl-la-vacca-saturno-saturnita-roblox-other-items-6336.jpg', caption: 'La Vacca Saturno Saturnita', glow: 'default' },
-                { img: 'https://www.rpgstash.com/225826-catalog_page/rbl-diamond-los-tralaleritos-roblox-other-items-6338.jpg', caption: 'Diamond Los Tralaleritos', glow: 'diamond' },
-                { img: 'https://www.rpgstash.com/225827-catalog_page/rbl-golden-graipuss-medussi-roblox-other-items-6339.jpg', caption: 'Golden Graipuss Medussi', glow: 'golden' },
-                { img: 'https://www.rpgstash.com/225828-catalog_page/rbl-golden-la-vacca-saturno-saturnita-roblox-other-items-6340.jpg', caption: 'Golden La Vacca Saturno Saturnita', glow: 'golden' },
-                { img: 'https://www.rpgstash.com/225830-catalog_page/rbl-rainbow-tralalero-tralala-roblox-other-items-6342.jpg', caption: 'Rainbow Tralalero Tralala', glow: 'rainbow' },
-                { img: 'https://www.rpgstash.com/225832-catalog_page/rbl-diamond-la-vacca-saturno-saturnita-roblox-other-items-6344.jpg', caption: 'Diamond La Vacca Saturno Saturnita', glow: 'diamond' },
-                { img: 'https://www.rpgstash.com/227572-catalog_page/rbl-golden-tralalero-tralala-roblox-other-items-6393.jpg', caption: 'Golden Tralalero Tralala', glow: 'golden' },
-                { img: 'https://www.rpgstash.com/231936-catalog_page/rbl-chimpanzini-spiderini-roblox-other-items-6560.jpg', caption: 'Chimpanzini Spiderini', glow: 'default' }
+                { img: 'images/rbl-la-grande-combinasion-roblox-other-items-6341.jpg', caption: 'La Grande Combinasion', glow: 'default' },
+                { img: 'images/rbl-odin-din-din-dun-roblox-other-items-6345.jpg', caption: 'Odin Din Din Dun', glow: 'default' },
+                { img: 'images/rbl-rainbow-odin-din-din-dun-roblox-other-items-6343.jpg', caption: 'Rainbow Odin Din Din Dun', glow: 'rainbow' },
+                { img: 'images/rbl-golden-los-tralaleritos-roblox-other-items-6337.jpg', caption: 'Golden Los Tralaleritos', glow: 'golden' },
+                { img: 'images/rbl-tralalero-tralala-roblox-other-items-6346.jpg', caption: 'Tralalero Tralala', glow: 'default' },
+                { img: 'images/rbl-la-vacca-saturno-saturnita-roblox-other-items-6336.jpg', caption: 'La Vacca Saturno Saturnita', glow: 'default' },
+                { img: 'images/rbl-diamond-los-tralaleritos-roblox-other-items-6338.jpg', caption: 'Diamond Los Tralaleritos', glow: 'diamond' },
+                { img: 'images/rbl-golden-graipuss-medussi-roblox-other-items-6339.jpg', caption: 'Golden Graipuss Medussi', glow: 'golden' },
+                { img: 'images/rbl-golden-la-vacca-saturno-saturnita-roblox-other-items-6340.jpg', caption: 'Golden La Vacca Saturno Saturnita', glow: 'golden' },
+                { img: 'images/rbl-rainbow-tralalero-tralala-roblox-other-items-6342.jpg', caption: 'Rainbow Tralalero Tralala', glow: 'rainbow' },
+                { img: 'images/rbl-diamond-la-vacca-saturno-saturnita-roblox-other-items-6344.jpg', caption: 'Diamond La Vacca Saturno Saturnita', glow: 'diamond' },
+                { img: 'images/rbl-golden-tralalero-tralala-roblox-other-items-6393.jpg', caption: 'Golden Tralalero Tralala', glow: 'golden' },
+                { img: 'images/rbl-chimpanzini-spiderini-roblox-other-items-6560.jpg', caption: 'Chimpanzini Spiderini', glow: 'default' }
             ];
 
             // --- DOM Elements ---
@@ -167,7 +167,7 @@
                     const glowClass = `glow-${originalItem.glow}`;
                     
                     // Added responsive margin classes (my-10 md:my-16)
-                    slideHTML += `
+						slideHTML += `
                         <div class="slide my-3 md:my-4" data-index="${index}" data-real-index="${realIndex}">
                             <div class="flex flex-col items-center justify-center p-2 box-border">
                                 <img src="${item.img}" alt="${item.caption}" class="max-h-[260vh] md:max-h-[275vh] w-auto max-w-[290vw] object-contain image-glow ${glowClass}" onerror="this.onerror=null;this.src='https://placehold.co/800x600/101010/ff0000?text=Image+Failed+To+Load';">
