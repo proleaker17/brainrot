@@ -146,9 +146,9 @@
             // --- State ---
             let currentIndex;
             let isScrolling = false;
-            const scrollTimeout = 700;
             const originalSlideCount = brainrotItems.length;
             const cloneCount = Math.min(3, originalSlideCount);
+            let touchStartY = 0; // For tracking touch start position
 
             /**
              * Sets up the slides, including clones for infinite looping.
@@ -166,8 +166,7 @@
                     const originalItem = brainrotItems[realIndex];
                     const glowClass = `glow-${originalItem.glow}`;
                     
-                    // Added responsive margin classes (my-10 md:my-16)
-						slideHTML += `
+					slideHTML += `
                         <div class="slide my-3 md:my-4" data-index="${index}" data-real-index="${realIndex}">
                             <div class="flex flex-col items-center justify-center p-2 box-border">
                                 <img src="${item.img}" alt="${item.caption}" class="max-h-[260vh] md:max-h-[275vh] w-auto max-w-[290vw] object-contain image-glow ${glowClass}" onerror="this.onerror=null;this.src='https://placehold.co/800x600/101010/ff0000?text=Image+Failed+To+Load';">
@@ -186,7 +185,6 @@
                 slider.classList.toggle('no-transition', !withTransition);
 
                 let offset = 0;
-                // Recalculate margin on the fly to handle resize
                 const slideMargin = parseInt(window.getComputedStyle(slides[0]).marginTop);
 
                 for (let i = 0; i < index; i++) {
@@ -197,7 +195,6 @@
                 slider.style.transform = `translateY(-${offset}px)`;
 
                 slides.forEach((slide) => {
-                    const slideIndex = parseInt(slide.dataset.index);
                     const realIndex = (index - cloneCount + originalSlideCount * 2) % originalSlideCount;
                     const slideRealIndex = parseInt(slide.dataset.realIndex);
                     slide.classList.toggle('is-active', realIndex === slideRealIndex);
@@ -228,6 +225,8 @@
                 showSlide(currentIndex - 1);
             }
 
+            // --- Event Handlers ---
+
             function handleKeyDown(e) {
                 if (e.key === 'ArrowDown') {
                     e.preventDefault();
@@ -256,11 +255,35 @@
                     }
                 }
             }
+            
+            // --- Touch Handlers ---
+            function handleTouchStart(e) {
+                if (isScrolling) return;
+                touchStartY = e.touches[0].clientY;
+            }
+
+            function handleTouchMove(e) {
+                // Prevent the browser from scrolling the page on mobile
+                e.preventDefault();
+            }
+
+            function handleTouchEnd(e) {
+                if (isScrolling) return;
+                const touchEndY = e.changedTouches[0].clientY;
+                const deltaY = touchStartY - touchEndY;
+                const swipeThreshold = 50; // Minimum pixels to be considered a swipe
+
+                if (deltaY > swipeThreshold) {
+                    // Swiped up
+                    goToNextSlide();
+                } else if (deltaY < -swipeThreshold) {
+                    // Swiped down
+                    goToPrevSlide();
+                }
+            }
 
             function init() {
                 setupSlides();
-                // Use a small delay to ensure all images are loaded and have dimensions
-                // before we calculate the initial position.
                 setTimeout(() => {
                     showSlide(currentIndex, false);
                     
@@ -269,10 +292,13 @@
                         handleLooping();
                     });
 
+                    // Add all event listeners
                     window.addEventListener('keydown', handleKeyDown);
-                    window.addEventListener('wheel', handleWheel, { passive: true });
+                    slider.addEventListener('wheel', handleWheel, { passive: true });
                     slider.addEventListener('click', handleSlideClick);
-                    // Recalculate positions on resize to maintain layout
+                    slider.addEventListener('touchstart', handleTouchStart, { passive: true });
+                    slider.addEventListener('touchmove', handleTouchMove, { passive: false });
+                    slider.addEventListener('touchend', handleTouchEnd, { passive: true });
                     window.addEventListener('resize', () => showSlide(currentIndex, false));
                 }, 200);
             }
