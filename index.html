@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steal a Brainrot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* New background inspired by the logo */
+            background-color: #d90429;
+            background-image: 
+                linear-gradient(45deg, #ef233c 25%, transparent 25%), 
+                linear-gradient(-45deg, #ef233c 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #ef233c 75%),
+                linear-gradient(-45deg, transparent 75%, #ef233c 75%);
+            background-size: 40px 40px;
+            color: #f0f0f0;
+            overflow: hidden; /* Prevents browser scrollbar */
+        }
+        
+        /* New title style to match the logo */
+        .game-title {
+            font-family: 'Lilita One', cursive;
+            color: #ffc300; /* Bright yellow */
+            -webkit-text-stroke: 2px #540b0e; /* Dark red/brown outline */
+            text-shadow: 3px 3px 0px #540b0e;
+        }
+        
+        @media (min-width: 768px) {
+            .game-title {
+                -webkit-text-stroke: 3px #540b0e;
+                text-shadow: 4px 4px 0px #540b0e;
+            }
+        }
+
+
+        #slider-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #slider {
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        
+        #slider.no-transition {
+            transition: none;
+        }
+
+        .slide {
+            /* Using Tailwind classes in HTML now for responsive margins */
+            opacity: 0.6;
+            transform: scale(0.8);
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+            cursor: pointer;
+        }
+
+        .slide.is-active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* --- Custom Glow Styles --- */
+        .image-glow {
+            transition: filter 0.7s ease-in-out;
+        }
+
+        /* Default Glow (Light Yellow) */
+        .slide.is-active .image-glow.glow-default {
+            filter: drop-shadow(0 0 15px rgba(255, 255, 224, 0.7));
+        }
+
+        /* Golden Glow */
+        .slide.is-active .image-glow.glow-golden {
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 5px rgba(255, 165, 0, 0.6));
+        }
+
+        /* Diamond Glow */
+        .slide.is-active .image-glow.glow-diamond {
+             filter: drop-shadow(0 0 15px rgba(185, 242, 255, 0.9)) drop-shadow(0 0 10px rgba(0, 191, 255, 0.7));
+        }
+
+        /* Rainbow Glow Animation */
+        @keyframes rainbow-glow {
+          0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.8)); }
+          16% { filter: drop-shadow(0 0 15px rgba(255, 127, 0, 0.8)); }
+          33% { filter: drop-shadow(0 0 15px rgba(255, 255, 0, 0.8)); }
+          50% { filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.8)); }
+          66% { filter: drop-shadow(0 0 15px rgba(0, 0, 255, 0.8)); }
+          83% { filter: drop-shadow(0 0 15px rgba(148, 0, 211, 0.8)); }
+        }
+        .slide.is-active .image-glow.glow-rainbow {
+            animation: rainbow-glow 4s linear infinite;
+        }
+
+    </style>
+</head>
+<body class="w-screen h-screen overflow-hidden">
+
+    <!-- Main container for the slider experience -->
+    <div id="slider-container" class="relative h-full w-full overflow-hidden">
+        
+        <!-- Header Title -->
+        <header class="absolute top-0 left-0 w-full p-4 md:p-6 z-20 pointer-events-none">
+            <h1 class="text-5xl sm:text-6xl md:text-7xl uppercase game-title text-center tracking-wider">
+                Steal a Brainrot
+            </h1>
+        </header>
+
+        <!-- The slider track, which moves vertically. pt-[50vh] is key for centering. -->
+        <div id="slider" class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-start pt-[50vh]">
+            <!-- Slides will be injected here by JavaScript -->
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Configuration ---
+            const brainrotItems = [
+                { img: 'https://www.rpgstash.com/225829-catalog_page/rbl-la-grande-combinasion-roblox-other-items-6341.jpg', caption: 'La Grande Combinasion', glow: 'default' },
+                { img: 'https://www.rpgstash.com/225833-catalog_page/rbl-odin-din-din-dun-roblox-other-items-6345.jpg', caption: 'Odin Din Din Dun', glow: 'default' },
+                { img: 'https://www.rpgstash.com/225831-catalog_page/rbl-rainbow-odin-din-din-dun-roblox-other-items-6343.jpg', caption: 'Rainbow Odin Din Din Dun', glow: 'rainbow' },
+                { img: 'https://www.rpgstash.com/225825-catalog_page/rbl-golden-los-tralaleritos-roblox-other-items-6337.jpg', caption: 'Golden Los Tralaleritos', glow: 'golden' },
+                { img: 'https://www.rpgstash.com/225834-catalog_page/rbl-tralalero-tralala-roblox-other-items-6346.jpg', caption: 'Tralalero Tralala', glow: 'default' },
+                { img: 'https://www.rpgstash.com/225824-catalog_page/rbl-la-vacca-saturno-saturnita-roblox-other-items-6336.jpg', caption: 'La Vacca Saturno Saturnita', glow: 'default' },
+                { img: 'https://www.rpgstash.com/225826-catalog_page/rbl-diamond-los-tralaleritos-roblox-other-items-6338.jpg', caption: 'Diamond Los Tralaleritos', glow: 'diamond' },
+                { img: 'https://www.rpgstash.com/225827-catalog_page/rbl-golden-graipuss-medussi-roblox-other-items-6339.jpg', caption: 'Golden Graipuss Medussi', glow: 'golden' },
+                { img: 'https://www.rpgstash.com/225828-catalog_page/rbl-golden-la-vacca-saturno-saturnita-roblox-other-items-6340.jpg', caption: 'Golden La Vacca Saturno Saturnita', glow: 'golden' },
+                { img: 'https://www.rpgstash.com/225830-catalog_page/rbl-rainbow-tralalero-tralala-roblox-other-items-6342.jpg', caption: 'Rainbow Tralalero Tralala', glow: 'rainbow' },
+                { img: 'https://www.rpgstash.com/225832-catalog_page/rbl-diamond-la-vacca-saturno-saturnita-roblox-other-items-6344.jpg', caption: 'Diamond La Vacca Saturno Saturnita', glow: 'diamond' },
+                { img: 'https://www.rpgstash.com/227572-catalog_page/rbl-golden-tralalero-tralala-roblox-other-items-6393.jpg', caption: 'Golden Tralalero Tralala', glow: 'golden' },
+                { img: 'https://www.rpgstash.com/231936-catalog_page/rbl-chimpanzini-spiderini-roblox-other-items-6560.jpg', caption: 'Chimpanzini Spiderini', glow: 'default' }
+            ];
+
+            // --- DOM Elements ---
+            const slider = document.getElementById('slider');
+            let slides = [];
+            
+            // --- State ---
+            let currentIndex;
+            let isScrolling = false;
+            const scrollTimeout = 700;
+            const originalSlideCount = brainrotItems.length;
+            const cloneCount = Math.min(3, originalSlideCount);
+
+            /**
+             * Sets up the slides, including clones for infinite looping.
+             */
+            function setupSlides() {
+                const allItems = [
+                    ...brainrotItems.slice(-cloneCount), 
+                    ...brainrotItems,                   
+                    ...brainrotItems.slice(0, cloneCount) 
+                ];
+
+                let slideHTML = '';
+                allItems.forEach((item, index) => {
+                    const realIndex = (index - cloneCount + originalSlideCount * 2) % originalSlideCount;
+                    const originalItem = brainrotItems[realIndex];
+                    const glowClass = `glow-${originalItem.glow}`;
+                    
+                    // Added responsive margin classes (my-10 md:my-16)
+                    slideHTML += `
+                        <div class="slide my-3 md:my-4" data-index="${index}" data-real-index="${realIndex}">
+                            <div class="flex flex-col items-center justify-center p-2 box-border">
+                                <img src="${item.img}" alt="${item.caption}" class="max-h-[260vh] md:max-h-[275vh] w-auto max-w-[290vw] object-contain image-glow ${glowClass}" onerror="this.onerror=null;this.src='https://placehold.co/800x600/101010/ff0000?text=Image+Failed+To+Load';">
+                                <p class="mt-4 md:mt-6 text-base md:text-xl text-center text-yellow-100/80 font-semibold">${item.caption}</p>
+                            </div>
+                        </div>`;
+                });
+                slider.innerHTML = slideHTML;
+                slides = document.querySelectorAll('.slide');
+                currentIndex = cloneCount;
+            }
+
+            function showSlide(index, withTransition = true) {
+                if (!slides.length || !slides[index]) return;
+                
+                slider.classList.toggle('no-transition', !withTransition);
+
+                let offset = 0;
+                // Recalculate margin on the fly to handle resize
+                const slideMargin = parseInt(window.getComputedStyle(slides[0]).marginTop);
+
+                for (let i = 0; i < index; i++) {
+                    offset += slides[i].offsetHeight + (slideMargin * 2);
+                }
+                offset += slides[index].offsetHeight / 2 + slideMargin;
+
+                slider.style.transform = `translateY(-${offset}px)`;
+
+                slides.forEach((slide) => {
+                    const slideIndex = parseInt(slide.dataset.index);
+                    const realIndex = (index - cloneCount + originalSlideCount * 2) % originalSlideCount;
+                    const slideRealIndex = parseInt(slide.dataset.realIndex);
+                    slide.classList.toggle('is-active', realIndex === slideRealIndex);
+                });
+                
+                currentIndex = index;
+            }
+
+            function handleLooping() {
+                if (currentIndex < cloneCount) {
+                    currentIndex += originalSlideCount;
+                    showSlide(currentIndex, false);
+                } else if (currentIndex >= originalSlideCount + cloneCount) {
+                    currentIndex -= originalSlideCount;
+                    showSlide(currentIndex, false);
+                }
+            }
+
+            function goToNextSlide() {
+                if (isScrolling) return;
+                isScrolling = true;
+                showSlide(currentIndex + 1);
+            }
+
+            function goToPrevSlide() {
+                if (isScrolling) return;
+                isScrolling = true;
+                showSlide(currentIndex - 1);
+            }
+
+            function handleKeyDown(e) {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    goToNextSlide();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    goToPrevSlide();
+                }
+            }
+
+            function handleWheel(e) {
+                if (e.deltaY > 0) {
+                    goToNextSlide();
+                } else if (e.deltaY < 0) {
+                    goToPrevSlide();
+                }
+            }
+            
+            function handleSlideClick(e) {
+                const clickedSlide = e.target.closest('.slide');
+                if (clickedSlide && !isScrolling) {
+                    const newIndex = parseInt(clickedSlide.dataset.index, 10);
+                    if (newIndex !== currentIndex) {
+                       isScrolling = true;
+                       showSlide(newIndex);
+                    }
+                }
+            }
+
+            function init() {
+                setupSlides();
+                // Use a small delay to ensure all images are loaded and have dimensions
+                // before we calculate the initial position.
+                setTimeout(() => {
+                    showSlide(currentIndex, false);
+                    
+                    slider.addEventListener('transitionend', () => {
+                        isScrolling = false;
+                        handleLooping();
+                    });
+
+                    window.addEventListener('keydown', handleKeyDown);
+                    window.addEventListener('wheel', handleWheel, { passive: true });
+                    slider.addEventListener('click', handleSlideClick);
+                    // Recalculate positions on resize to maintain layout
+                    window.addEventListener('resize', () => showSlide(currentIndex, false));
+                }, 200);
+            }
+
+            init();
+        });
+    </script>
+</body>
+</html>
